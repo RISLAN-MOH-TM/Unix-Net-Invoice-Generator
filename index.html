@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes, minimum-scale=0.5, maximum-scale=2.0">
+    <title>Invoice Generator - Unix-Net Technologies</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <div class="form-section">
+            <h1>Invoice Generator</h1>
+            <form id="invoiceForm">
+                <div class="form-group">
+                    <label for="invoiceNumber">Invoice Number:</label>
+                    <input type="text" id="invoiceNumber" value="001" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="invoiceDate">Invoice Date:</label>
+                    <input type="date" id="invoiceDate" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="dueDate">Due Date:</label>
+                    <input type="date" id="dueDate" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="clientName">Client Name:</label>
+                    <input type="text" id="clientName" placeholder="" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="clientAddress">Client Address:</label>
+                    <textarea id="clientAddress" placeholder="Flood Protection Road, Akkaraipattu" required></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label for="clientPhone">Client Phone:</label>
+                    <input type="text" id="clientPhone" placeholder="">
+                </div>
+                
+                <h3>Invoice Items</h3>
+                <div id="itemsContainer">
+                    <div class="item-row">
+                        <input type="text" placeholder="Description" class="item-desc" required>
+                        <input type="number" placeholder="Price" class="item-price" step="0.01" required>
+                        <input type="number" placeholder="Qty" class="item-qty" value="1" min="1" required>
+                        <button type="button" class="remove-item">Remove</button>
+                    </div>
+                </div>
+                
+                <button type="button" id="addItem">Add Item</button>
+                
+                <div class="form-group">
+                    <label for="alreadyPaid">Already Paid:</label>
+                    <input type="number" id="alreadyPaid" step="0.01" value="0">
+                </div>
+                
+                <div class="form-group">
+                    <label for="bankName">Bank Name:</label>
+                    <input type="text" id="bankName" placeholder="Bank">
+                </div>
+                
+                <div class="form-group">
+                    <label for="accountName">Account Name:</label>
+                    <input type="text" id="accountName" placeholder="Account Name">
+                </div>
+                
+                <div class="form-group">
+                    <label for="accountNumber">Account Number:</label>
+                    <input type="text" id="accountNumber" placeholder="Account Number">
+                </div>
+                
+                <div class="form-buttons">
+                    <button type="button" onclick="clearForm()" class="clear-btn">🗑️ Clear Form</button>
+                    <button type="submit">Generate Invoice</button>
+                </div>
+            </form>
+        </div>
+        
+        <div class="invoice-section" id="invoicePreview" style="display: none;">
+            <div class="invoice-container">
+                <div class="invoice-header">
+                    <div class="logo">
+                        <img src="logo.png" alt="Unix-Net Logo" class="logo-image">
+                        <div class="company-name">
+                            <div>UNIX-NET</div>
+                            <div>TECHNOLOGIES</div>
+                        </div>
+                    </div>
+                    <div class="invoice-title">
+                        <h1>INVOICE</h1>
+                    </div>
+                </div>
+                
+                <div class="invoice-details">
+                    <div class="invoice-info">
+                        <div class="invoice-number">
+                            <strong>INVOICE #</strong> <span id="displayInvoiceNumber"></span>
+                        </div>
+                        <div class="dates">
+                            <div><strong>INVOICE DATE :</strong> <span id="displayInvoiceDate"></span></div>
+                            <div><strong>DUE DATE :</strong> <span id="displayDueDate"></span></div>
+                        </div>
+                    </div>
+                    
+                    <div class="bill-to">
+                        <div><strong>BILL TO</strong></div>
+                        <div id="displayClientName"></div>
+                        <div id="displayClientAddress"></div>
+                        <div id="displayClientPhone"></div>
+                    </div>
+                </div>
+                
+                <table class="invoice-table">
+                    <thead>
+                        <tr>
+                            <th>NO</th>
+                            <th>DESCRIPTION</th>
+                            <th>PRICE</th>
+                            <th>QTY</th>
+                            <th>TOTAL</th>
+                        </tr>
+                    </thead>
+                    <tbody id="invoiceItems">
+                    </tbody>
+                </table>
+                
+                <div class="invoice-totals">
+                    <div class="totals-row">
+                        <span>SUB-TOTAL</span>
+                        <span id="displaySubTotal"></span>
+                    </div>
+                    <div class="totals-row">
+                        <span>ALREADY PAY</span>
+                        <span id="displayAlreadyPaid"></span>
+                    </div>
+                    <div class="totals-row total-due">
+                        <span>Total Due</span>
+                        <span id="displayTotalDue"></span>
+                    </div>
+                </div>
+                
+                <div class="payment-info">
+                    <div class="payment-method">
+                        <h3>PAYMENT METHOD</h3>
+                        <div>Bank : <span id="displayBankName"></span></div>
+                        <div>Account Name : <span id="displayAccountName"></span></div>
+                        <div>Account Number : <span id="displayAccountNumber"></span></div>
+                    </div>
+                    
+                    <div class="terms">
+                        <h3>TERM AND CONDITIONS</h3>
+                        <p>Please make the payment by the due date to the account below. We accept bank transfer and if you have any issues inform us without files.</p>
+                    </div>
+                    
+                    <div class="signature">
+                        <div><strong>Samri Ahameth</strong></div>
+                        <div>CEO</div>
+                    </div>
+                </div>
+                
+                <div class="invoice-footer">
+                    <div>THANK YOU FOR YOUR BUSINESS</div>
+                    <div class="company-footer">UNIX-NET TECHNOLOGIES</div>
+                </div>
+            </div>
+            
+            <div class="action-buttons">
+                <button onclick="downloadPDF()">Download PDF</button>
+                <button onclick="shareWhatsApp()" class="whatsapp-btn">📱 Share WhatsApp</button>
+                <button onclick="editInvoice()">Edit Invoice</button>
+            </div>
+        </div>
+    </div>
+    
+    <script src="script.js"></script>
+</body>
+</html>
