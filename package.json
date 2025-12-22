@@ -1,0 +1,16 @@
+{
+  "name": "unix-net-invoice-generator",
+  "version": "1.0.0",
+  "description": "Professional Invoice Generator for Unix-Net Technologies",
+  "main": "index.html",
+  "scripts": {
+    "start": "serve .",
+    "build": "echo 'Static site - no build needed'"
+  },
+  "keywords": ["invoice", "generator", "unix-net", "technologies"],
+  "author": "Unix-Net Technologies",
+  "license": "MIT",
+  "devDependencies": {
+    "serve": "^14.0.0"
+  }
+}
